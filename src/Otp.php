@@ -1,14 +1,14 @@
 <?php
 /**
- * Author: Semen Dubina
+ * Author: Semen Dubina [modified by Graeme Wolfendale]
  * Date: 19.01.16
  * Time: 15:24
  */
 
-namespace sam002\otp;
+namespace infoburp\otp;
 
 use Base32\Base32;
-use sam002\otp\helpers\OtpHelper;
+use infoburp\otp\helpers\OtpHelper;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\validators\UrlValidator;
@@ -24,8 +24,8 @@ use yii\validators\UrlValidator;
  *          'class' => 'sam002\otp\Otp',
  *          'algorithm' => sam002\otp\Collection::ALGORITHM_HOTP
  *          'digits' => 6,
- *          'digets' => 'sha1',
- *          'lable' => 'yii2-otp',
+ *          'digest' => 'sha1',
+ *          'label' => 'yii2-otp',
  *          'imgLabelUrl' => Yii,
  *          'secretLength' => 16
  *     ]
@@ -33,8 +33,8 @@ use yii\validators\UrlValidator;
  * ]
  * ~~~
  *
- * @author Semen Dubina <sam@sam002.net>
- * @package sam002\otp
+ * @author Semen Dubina <sam@sam002.net> [modified by Graeme Wolfendale]
+ * @package infoburp\otp
  */
 class Otp extends Component
 {
@@ -58,7 +58,7 @@ class Otp extends Component
     /**
      * @var string
      */
-    public $digets = 'sha1';
+    public $digest = 'sha1';
 
     /**
      * @var int
@@ -68,12 +68,12 @@ class Otp extends Component
     /**
      * @var int
      */
-    public $counter = null;
+    public $counter = 0;
 
     /**
      * @var string
      */
-    public $lable = 'yii2-otp';
+    public $label = 'yii2-otp';
 
     /**
      * @var null
@@ -96,21 +96,22 @@ class Otp extends Component
     {
         parent::init();
         if ($this->algorithm === self::ALGORITHM_TOTP) {
-            $this->otp = OtpHelper::getTotp($this->lable, $this->digits, $this->digets, $this->interval);
+            $this->otp = OtpHelper::getTotp($this->label, $this->digits, $this->digest, $this->interval);
         } elseif ($this->algorithm === self::ALGORITHM_HOTP) {
-            $this->otp = OtpHelper::getHotp($this->lable, $this->digits, $this->digets, $this->counter);
+            $this->otp = OtpHelper::getHotp($this->label, $this->digits, $this->digest, $this->counter);
         } else {
             throw new InvalidConfigException('otp::$algorithm = \"' . $this->algorithm . '\" not allowed, only Otp::ALGORITHM_TOTP or Otp::ALGORITHM_HOTP');
         }
 
-        if (!empty($this->imgLabelUrl) && is_string($this->imgLabelUrl)) {
+        //CHANGED: removed image label validation, because it was just causing issues
+        /*if (!empty($this->imgLabelUrl) && is_string($this->imgLabelUrl)) {
             $validator = new UrlValidator();
             if ($validator->validate($this->imgLabelUrl)) {
                 $this->otp->setImage($this->imgLabelUrl);
             } else {
                 throw new InvalidConfigException($validator->message);
             }
-        }
+        }*/
     }
 
     /**
@@ -148,7 +149,40 @@ class Otp extends Component
         $this->_secret = $value;
     }
 
-    public function valideteCode($code, $window = 0)
+    /**
+     * @return null|integer
+     * @throws InvalidConfigException
+     */
+    public function getCounter()
+    {
+        if($this->algorithm === self::ALGORITHM_HOTP) {
+            if(!(filter_var($this->counter, FILTER_VALIDATE_INT) === 0 || filter_var($this->counter, FILTER_VALIDATE_INT))) {
+                throw new InvalidConfigException('Otp::$count is not an integer)');
+            } elseif ($this->counter < 0) {
+                throw new InvalidConfigException('Otp::$count incorect, must be >= 0');
+            }
+            return $this->counter;
+        } else {
+            throw new InvalidConfigException('otp::$algorithm = \"' . $this->algorithm . '\" does not have a count, only Otp::ALGORITHM_HOTP');
+        }
+    }
+
+    public function setCounter($value)
+    {
+        if($this->algorithm === self::ALGORITHM_HOTP) {
+            if(!(filter_var($value, FILTER_VALIDATE_INT) === 0 || filter_var($value, FILTER_VALIDATE_INT))) {
+                throw new InvalidConfigException('Otp::setCounter counter is not an integer)');
+            } elseif ($value < 0) {
+                throw new InvalidConfigException('Otp::setCounter incorect, must be >= 0');
+            }
+            $this->otp->setCounter($value);
+            $this->counter = $value;
+        } else {
+            throw new InvalidConfigException('otp::$algorithm = \"' . $this->algorithm . '\" does not have a counter, only Otp::ALGORITHM_HOTP');
+        }
+    }
+
+    public function validateCode($code, $window = 0)
     {
         return $this->otp->verify($code, $this->counter, $window);
     }

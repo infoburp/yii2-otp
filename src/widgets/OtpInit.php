@@ -5,7 +5,7 @@
  * Time: 4:22
  */
 
-namespace sam002\otp\widgets;
+namespace infoburp\otp\widgets;
 
 
 use dosamigos\qrcode\lib\Enum;

@@ -16,12 +16,12 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-composer require sam002/yii2-otp:~0.1.1
+composer require infoburp/yii2-otp:~0.1.1
 ```
 or add
 
 ```json
-"sam002/yii2-otp" : "~0.1.1"
+"infoburp/yii2-otp" : "~0.1.1"
 ```
 
 to the require section of your application's `composer.json` file.
@@ -36,7 +36,7 @@ After extension is installed you need to setup auth client collection applicatio
 
 ```php
 <?php
-use sam002\otp\Otp;
+use infoburp\otp\Otp;
 
 ...
 
@@ -44,7 +44,7 @@ use sam002\otp\Otp;
     'otp' => [
         'class' => 'Otp',
         // 'totp' only now
-        'algorithm' => sam002\otp\Collection::ALGORITHM_TOTP
+        'algorithm' => infoburp\otp\Collection::ALGORITHM_TOTP
         
         // length of code
         'digits' => 6,
@@ -71,7 +71,7 @@ Add any model column for storing secure code. //My case: the use of two-factor a
 
 ```php
 <?php
-use sam002\otp\behaviors\OtpBehavior;
+use infoburp\otp\behaviors\OtpBehavior;
 
 ...
 
@@ -95,7 +95,7 @@ use sam002\otp\behaviors\OtpBehavior;
 Widget for generate init QR-code
 
 ```php
-use sam002\otp\widgets\OtpInit;
+use infoburp\otp\widgets\OtpInit;
 
 <?php echo $form->field($model, 'otpSecret')->widget(
                     OtpInit::className() ,[
@@ -159,6 +159,7 @@ Credits
 -------
 
 - [sam002](https://github.com/sam002)
+- [infoburp](https://github.com/infoburp)
 - [All Contributors](../../contributors)
 
 

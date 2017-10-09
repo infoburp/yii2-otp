@@ -5,10 +5,10 @@
  * Time: 15:34
  */
 
-namespace sam002\otp\behaviors;
+namespace infoburp\otp\behaviors;
 
 use Yii;
-use sam002\otp\Otp;
+use infoburp\otp\Otp;
 use yii\base\Behavior;
 
 
@@ -31,8 +31,8 @@ use yii\base\Behavior;
  * ```
  *
  * @see https://en.wikipedia.org/wiki/Two-factor_authentication
- * @author sam002
- * @package sam002\otp
+ * @author sam002 [modified by infoburp]
+ * @package infoburp\otp
  */
 class OtpBehavior extends Behavior
 {
@@ -85,9 +85,30 @@ class OtpBehavior extends Behavior
     public function validateOtpSecret($code)
     {
         if ($this->getOtpSecret()) {
-            return $this->otp->valideteCode($code, $this->window);
+            if (isset($this->owner->{$this->countAttribute})) {
+                $this->otp->setCounter($this->owner->{$this->countAttribute});
+                if ($this->otp->validateCode($code, $this->window, $this->owner)) {
+                    //increment the owner's count attribute value
+                    $this->owner->{$this->countAttribute} = $this->owner->{$this->countAttribute} + 1;
+                    $this->owner->save(false);
+                    return true;
+                }
+            }
         }
         return false;
+    }
+
+    public function setOtpCounter($value)
+    {
+        $this->otp->setCounter($value);
+    }
+
+    public function getOtpCounter()
+    {
+        if (isset($this->owner->{$this->countAttribute})) {
+            $this->otp->setCounter($this->owner->{$this->countAttribute});
+        }
+        return $this->otp->getCounter();
     }
 
 }

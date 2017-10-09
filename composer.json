@@ -1,5 +1,5 @@
 {
-  "name": "sam002/yii2-otp",
+  "name": "infoburp/yii2-otp",
 
   "type": "yii2-extension",
 
@@ -7,14 +7,19 @@
   "keywords": ["yii2", "otp", "hotp", "totp", "two-factor authentication", "2FA", "two-factor", "authentication"],
   "license": "LGPL-3.0",
   "support": {
-    "issues": "https://github.com/sam002/yii2-otp/issues",
-    "source": "https://github.com/sam002/yii2-otp"
+    "issues": "https://github.com/infoburp/yii2-otp/issues",
+    "source": "https://github.com/infoburp/yii2-otp"
   },
   "authors": [
     {
       "name": "Semen Dubina",
       "email": "yii2-otp@sam002.net",
       "homepage": "http://sam002.net/project/yii2-otp",
+      "role": "Developer"
+    },
+    {
+      "name": "Graeme Wolfendale",
+      "email": "gwolfendale@gmail.com",
       "role": "Developer"
     }
   ],
@@ -25,7 +30,7 @@
   },
   "autoload": {
     "psr-4": {
-      "sam002\\otp\\": "src"
+      "infoburp\\otp\\": "src"
     }
   }
 }
