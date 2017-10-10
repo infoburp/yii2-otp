@@ -5,10 +5,10 @@
  * Time: 15:34
  */
 
-namespace infoburp\otp\behaviors;
+namespace infoburp\yii2\otp\behaviors;
 
 use Yii;
-use infoburp\otp\Otp;
+use infoburp\yii2\otp\Otp;
 use yii\base\Behavior;
 
 
@@ -39,7 +39,7 @@ class OtpBehavior extends Behavior
     /**
      * @var string
      */
-    public $component = 'otp';
+    public $component = 'yii2\otp';
 
     /**
      * @var string

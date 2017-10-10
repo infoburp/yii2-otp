@@ -5,7 +5,7 @@
  * Time: 23:06
  */
 
-namespace infoburp\otp\helpers;
+namespace infoburp\yii2\otp\helpers;
 
 use Base32\Base32;
 use yii\base\Security;

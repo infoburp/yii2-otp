@@ -5,10 +5,10 @@
  * Time: 15:24
  */
 
-namespace infoburp\otp;
+namespace infoburp\yii2\otp;
 
 use Base32\Base32;
-use infoburp\otp\helpers\OtpHelper;
+use infoburp\yii2\otp\helpers\OtpHelper;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\validators\UrlValidator;

@@ -30,7 +30,7 @@
   },
   "autoload": {
     "psr-4": {
-      "infoburp\\otp\\": "src"
+      "infoburp\\yii2\\otp\\": "src"
     }
   }
 }
